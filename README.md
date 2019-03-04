@@ -21,12 +21,26 @@ Or install it yourself as:
 ## Usage
 Add the following line into the model class that you want to split:
 ```ruby
-  separated_by :form_id, :calc_collection_name
+    class Entry
+      include Mongoid::Document
+      include Mongoid::Timestamps
+      include Mongoid::CollectionSeparated
+      include Mongoid::Attributes::Dynamic
+      belongs_to :form
+
+      separated_by :form_id, :calc_collection_name
+      class << self
+        def calc_collection_name form_id
+          return if form_id.nil?
+          "entries_#{form_id}"
+        end
+      end
+    end
 ```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mongoid_collection_separatable.
+Bug reports and pull requests are welcome on GitHub at https://github.com/WeiGangqiang/mongoid_collection_separated
 
 ## License
 
