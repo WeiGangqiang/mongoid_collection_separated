@@ -1,0 +1,1 @@
+# mongoid_collection_separated
