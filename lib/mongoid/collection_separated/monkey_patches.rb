@@ -6,8 +6,8 @@ module Mongoid
     # 1. Get form_id from selector
     # 2. If collection is entries, not matter from context or current collection object, and form has entries_separated flag set, set collection  name instance variable to entries plus form_id as new collection name
 
-    def create_context_with_separated_entries
-      context = create_context_without_separated_entries
+    def create_context_with_separated
+      context = create_context_without_separated
       query_class = instance_variable_get :@klass
       new_collection_name = calc_new_collection_name query_class
       unless new_collection_name.blank?
@@ -38,8 +38,8 @@ module Mongoid
       selector[query_class.separated_field.to_s]
     end
 
-    alias_method :create_context_without_separated_entries, :create_context
-    alias_method :create_context, :create_context_with_separated_entries
+    alias_method :create_context_without_separated, :create_context
+    alias_method :create_context, :create_context_with_separated
   end
 end
 
@@ -53,8 +53,8 @@ module Mongoid
         # 1. 'base' should be an instance of Form
         # 2. If form has entries_separated flat and collection name is entries, clone a new context because it is build each time when called and set to context. Then remove form_id from selector because all the entries inside the new collection has the same form_id
 
-        def criteria_with_separated_entries
-          cri = criteria_without_separated_entries
+        def criteria_with_separated
+          cri = criteria_without_separated
           query_class = cri.instance_variable_get :@klass
           if should_query_from_separated_collection? query_class
             context = cri.context.clone
@@ -83,8 +83,8 @@ module Mongoid
           query_class.send(query_class.calc_collection_name_fun, base.send(query_class.separated_parent_field))
         end
 
-        alias_method :criteria_without_separated_entries, :criteria
-        alias_method :criteria, :criteria_with_separated_entries
+        alias_method :criteria_without_separated, :criteria
+        alias_method :criteria, :criteria_with_separated
       end
     end
   end
