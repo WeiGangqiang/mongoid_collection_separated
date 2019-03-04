@@ -20,6 +20,25 @@ Or install it yourself as:
 
 ## Usage
 Add the following line into the model class that you want to split:
+### 1. spepated by simple field
+```ruby
+    class Entry
+      include Mongoid::Document
+      include Mongoid::Timestamps
+      include Mongoid::CollectionSeparated
+      include Mongoid::Attributes::Dynamic
+
+      separated_by :collection_suffix, :calc_collection_name
+      class << self
+        def calc_collection_name collection_suffix
+          return if collection_suffix.nil?
+          "entries_#{collection_suffix}"
+        end
+      end
+    end
+```
+
+### 2. spepated by belongs to model id
 ```ruby
     class Entry
       include Mongoid::Document
@@ -28,7 +47,7 @@ Add the following line into the model class that you want to split:
       include Mongoid::Attributes::Dynamic
       belongs_to :form
 
-      separated_by :form_id, :calc_collection_name
+      separated_by :form_id, :calc_collection_name, parent_class: 'Form'
       class << self
         def calc_collection_name form_id
           return if form_id.nil?
@@ -36,6 +55,13 @@ Add the following line into the model class that you want to split:
         end
       end
     end
+
+
+    class Form
+      include Mongoid::Document
+      has_many :entries
+    end
+
 ```
 
 ## Contributing
