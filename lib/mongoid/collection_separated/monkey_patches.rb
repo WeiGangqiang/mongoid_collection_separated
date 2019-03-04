@@ -20,8 +20,8 @@ module Mongoid
 
     def calc_new_collection_name query_class
       return unless query_class.respond_to?(:separated_field) && query_class.send(:separated_field).present?
-      return unless query_class.respond_to?(:calc_collection_name_fun) || query_class.respond_to?(query_class.calc_collection_name_fun)
-      query_class.send(query_class.calc_collection_name_fun, (separated_value(query_class)))
+      return unless query_class.respond_to?(:calc_collection_name_fun) && query_class.respond_to?(query_class.calc_collection_name_fun)
+      query_class.send(query_class.calc_collection_name_fun, separated_value(query_class))
     end
 
     def separated_value query_class
@@ -68,11 +68,18 @@ module Mongoid
         end
 
         def should_query_from_separated_collection?(query_class)
-          query_class.respond_to?(:separated_field) && query_class.send(:separated_field) && base.is_a?(query_class.separated_parent_class) && base.respond_to?(query_class.separated_parent_field)
+          is_separated_query_class?(query_class) && is_separated_parent_class?(query_class)
+        end
+
+        def is_separated_query_class? query_class
+          query_class.respond_to?(:separated_field) && query_class.send(:separated_field) && query_class.respond_to?(:calc_collection_name_fun) && query_class.respond_to?(query_class.calc_collection_name_fun)
+        end
+
+        def is_separated_parent_class? query_class
+          base.is_a?(query_class.separated_parent_class) && base.respond_to?(query_class.separated_parent_field)
         end
 
         def calc_new_collection_name query_class
-          return unless query_class.respond_to?(:calc_collection_name_fun) or query_class.respond_to?(query_class.calc_collection_name_fun)
           query_class.send(query_class.calc_collection_name_fun, base.send(query_class.separated_parent_field))
         end
 
