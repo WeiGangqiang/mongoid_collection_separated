@@ -76,13 +76,7 @@ RSpec.describe Mongoid::CollectionSeparated do
     context 'query and persist entries from separated collections when condition field is true' do
       let(:form) {Form.create!}
       before do
-        puts FormSpilt.count
         form.entries_separate
-        puts form.id
-        puts FormSpilt.find_by(form_id: form.id).nil?
-        puts FormSpilt.count
-        puts FormSpilt.first.form_id
-        puts "......"
       end
 
       context 'for root document' do
