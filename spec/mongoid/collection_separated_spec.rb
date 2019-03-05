@@ -32,7 +32,7 @@ RSpec.describe Mongoid::CollectionSeparated do
   end
 
   describe 'query and persist' do
-    context 'query and persist entries form entries collection when condition field is not set' do
+    context 'query and persist entries form entries collection when collection is not separated' do
       let(:form) {Form.create!}
 
       it 'when create' do
@@ -73,7 +73,7 @@ RSpec.describe Mongoid::CollectionSeparated do
       end
     end
 
-    context 'query and persist entries from separated collections when condition field is true' do
+    context 'query and persist entries from separated collections when collection is separated' do
       let(:form) {Form.create!}
       before do
         form.entries_separate
