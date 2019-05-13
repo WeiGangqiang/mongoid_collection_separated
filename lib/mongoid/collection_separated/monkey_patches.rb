@@ -21,7 +21,7 @@ module Mongoid
     def calc_new_collection_name query_class
       return unless query_class.respond_to?(:separated_field) && query_class.send(:separated_field).present?
       return unless query_class.respond_to?(:calc_collection_name_fun) && query_class.respond_to?(query_class.calc_collection_name_fun)
-      query_class.send(query_class.calc_collection_name_fun, separated_value(query_class))
+      query_class.send(:ensure_collection_name, separated_value(query_class))
     end
 
     def separated_value query_class
@@ -80,7 +80,7 @@ module Mongoid
         end
 
         def calc_new_collection_name query_class
-          query_class.send(query_class.calc_collection_name_fun, base.send(query_class.separated_parent_field))
+          query_class.send(:ensure_collection_name, base.send(query_class.separated_parent_field))
         end
 
         alias_method :criteria_without_separated, :criteria

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mongoid-collection-separated (0.2.0)
+    mongoid-collection-separated (0.3.0)
       mongoid (~> 6.2)
 
 GEM
