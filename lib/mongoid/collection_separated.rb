@@ -18,12 +18,6 @@ module Mongoid
         @calc_collection_name_fun = calc_collection_name_fun
       end
 
-      def ensure_collection_name separate_key
-        cache_key = "#{__method__}_#{separate_key}"
-        return instance_variable_get "@#{cache_key}" if instance_variable_defined? "@#{cache_key}"
-        collection_name = self.send(self.send(:calc_collection_name_fun), separate_key)
-        instance_variable_set "@#{cache_key}", collection_name
-      end
     end
 
   end

@@ -21,7 +21,12 @@ module Mongoid
     def calc_new_collection_name query_class
       return unless query_class.respond_to?(:separated_field) && query_class.send(:separated_field).present?
       return unless query_class.respond_to?(:calc_collection_name_fun) && query_class.respond_to?(query_class.calc_collection_name_fun)
-      query_class.send(:ensure_collection_name, separated_value(query_class))
+      separated_key = separated_value(query_class)
+      cache_key = "#{__method__}_#{separated_key}"
+      return instance_variable_get "@#{cache_key}" if instance_variable_defined? "@#{cache_key}"
+      collection_name = query_class.send(query_class.calc_collection_name_fun, separated_key)
+      instance_variable_set "@#{cache_key}", collection_name
+      collection_name
     end
 
     def separated_value query_class
@@ -80,7 +85,12 @@ module Mongoid
         end
 
         def calc_new_collection_name query_class
-          query_class.send(:ensure_collection_name, base.send(query_class.separated_parent_field))
+          separated_key = base.send(query_class.separated_parent_field)
+          cache_key = "#{__method__}_#{separated_key}"
+          return instance_variable_get "@#{cache_key}" if instance_variable_defined? "@#{cache_key}"
+          collection_name = query_class.send(query_class.calc_collection_name_fun, separated_key)
+          instance_variable_set "@#{cache_key}", collection_name
+          collection_name
         end
 
         alias_method :criteria_without_separated, :criteria
